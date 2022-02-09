@@ -1,0 +1,28 @@
+version: "3"
+volumes:
+  data:
+
+services:
+  database:
+    image: mongo:4.0-xenial
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data/db
+
+  backend:
+    build: ./backend
+    ports:
+      - 5000:5000
+    environment:
+      DB_LOCAL_URL: mongodb://database/mern-stack
+    depends_on:
+      - database
+
+  frontend:
+    build: ./frontend
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+
